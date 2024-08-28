@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Line List</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles.css}">
+</head>
+<body>
+<h1>List of Lines</h1>
+<a th:href="@{/newSearch}"><button>To Search</button></a>
+<a th:href="@{/new}"><button>New Line</button></a>
+<div th:each="line : ${lines}">
+    <p th:text="${line.name}"></p>
+    <a th:href="@{/edit/{lineId}(lineId=${line.id})}"><button>Edit</button></a>
+    <a th:href="@{/delete/{lineId}(lineId=${line.id})}"><button>Delete</button></a>
+</div>
+
+</body>
+</html>

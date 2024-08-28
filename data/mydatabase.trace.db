@@ -1,0 +1,6 @@
+2024-08-22 17:33:35.496492+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "STOP" not found (this database is empty); SQL statement:
+select s1_0.id,s1_0.line_id,s1_0.minutes_arr,s1_0.minutes_dep,s1_0.name from stop s1_0 [42104-224]
+2024-08-22 17:36:16.525230+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "STOP" not found (this database is empty); SQL statement:
+select s1_0.id,s1_0.line_id,s1_0.minutes_arr,s1_0.minutes_dep,s1_0.name from stop s1_0 [42104-224]

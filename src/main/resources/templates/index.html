@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Journey planner</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles.css}">
+</head>
+<body>
+<h1>Welcome to Journey planner! Search here for connections:</h1>
+<form method="post" th:action="@{/search}" th:object="${searchParams}">
+
+    <div>
+        <div class="searchDiv" >
+            <label for="fromField">From:</label>
+            <input id="fromField" list="stops" type="text" required="required" size="30" th:value="${searchParams.from}" th:field="*{from}" />
+            <label for="toField">To:</label>
+            <input id="toField" list="stops" type="text" required="required" size="30" th:value="${searchParams.to}" th:field="*{to}" />
+        </div>
+        <div style="color: red;" th:if="${#fields.hasErrors('from')}" th:errors="*{from}"></div>
+        <div style="color: red;" th:if="${#fields.hasErrors('to')}" th:errors="*{to}"></div>
+
+        <div class="searchDiv">
+            <label for="timeField">Time:</label>
+            <input id="timeField" type="time" required="required" th:value="${searchParams.time}" th:field="*{time}" />
+            <label for="transfersField">Allow transfers:</label>
+            <input id="transfersField" type="checkbox" th:value="${searchParams.allowTransfers}" th:field="*{allowTransfers}" />
+            <label for="transferTimeField">Transfer reserve time:</label>
+            <input id="transferTimeField" type="number" min="1" required="required" th:value="${searchParams.minTransferTime}" th:field="*{minTransferTime}" />
+
+        </div>
+        <button type="submit">Search</button>
+        <div style="color: red;" th:if="${#fields.hasErrors('time')}" th:errors="*{time}"></div>
+        <div style="color: red;" th:if="${#fields.hasErrors('minTransferTime')}" th:errors="*{minTransferTime}"></div>
+    </div>
+</form>
+
+<a th:href="@{/lines}"><button>Manage base data</button></a>
+
+<datalist id="stops">
+    <option th:each="stopName : ${stopNames}" th:value="${stopName}" > <span th:text="${stopName}"/> </option>
+</datalist>
+
+</body>
+</html>

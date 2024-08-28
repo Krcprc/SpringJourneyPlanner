@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Search results</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles.css}">
+</head>
+<body>
+<h1>Search results</h1>
+
+<a th:href="@{/newSearch}"><button>New search</button></a>
+<a th:href="@{/}"><button>Change searching parameters</button></a>
+
+<p th:if="${paths == null || paths.size() == 0}"> No connections were found. </p>
+
+<div th:if="${paths != null}" th:each="path : ${paths}">
+    <div th:each="pathPart, iterStat : ${path}">
+        <p th:if="${pathPart.line() != null}"> <b th:text="${pathPart.line().getName()}"/></p>
+        <p th:if="${pathPart.line() == null && iterStat.index < path.size() - 1}"> <b>Waiting</b></p>
+        <p th:if="${pathPart.line() == null && iterStat.index == path.size() - 1}"> <b>Arrived</b></p>
+        <p> <span th:text="${pathPart.node().getStop()}"/> <span th:text="${pathPart.node().getReadableTime()}"/></p>
+    </div>
+</div>
+
+</body>
+</html>

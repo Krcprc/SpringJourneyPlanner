@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Line</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles.css}">
+</head>
+<body>
+<h1>Edit Line <span th:text="${line.name}"></span></h1>
+<form method="post" action="/save" th:object="${line}">
+    <input type="hidden" th:value="${line.id}" name="id" />
+    Line name: <input type="text" size="50" required="required" th:value="${line.name}" name="name" />
+    <div style="display: flex; flex-flow: row">
+        <div>
+            <table>
+                <tr>
+                    <th>Stop name</th>
+                    <th colspan="2">Travel time</th>
+                </tr>
+                <tr th:each="stop, iterStat : ${line.stops}">
+                    <td><input required="required" list="stops" type="text" size="30" th:value="${stop}" th:name="stops[__${iterStat.index}__]" /></td>
+                    <td><input required="required" type="number" size="3" th:value="${line.minutesArr[iterStat.index]}" th:name="minutesArr[__${iterStat.index}__]" /></td>
+                    <td><input required="required" type="number" size="3" th:value="${line.minutesDep[iterStat.index]}" th:name="minutesDep[__${iterStat.index}__]"/></td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <button type="submit" name="action" value="addRow">Add stop</button>
+                        <button type="submit" name="action" value="removeRow">Remove stop</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <th>Hr.</th>
+                    <th>Departures in minutes</th>
+                </tr>
+                <tr th:each="departure, iterStat : ${line.departures}">
+                    <td th:text="${iterStat.index}"></td>
+                    <td><input type="text" size="50" th:value="${departure}" th:name="departures[__${iterStat.index}__]" /></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <button type="submit" name="action" value="save">Save</button>
+    <a href="#" onclick="window.location.href='/lines'; return false;"><button>Back</button></a>
+</form>
+
+<datalist id="stops">
+    <option th:each="stopName : ${stopNames}" th:value="${stopName}" > <span th:text="${stopName}"/> </option>
+</datalist>
+
+</body>
+</html>
