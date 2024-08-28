@@ -39,3 +39,9 @@ Jízdní doby jsou realistické, jízdní řád intervaly odpovídá jednotlivý
 
 Inu to asi vše ohledně mého JourneyPlannera. Jsem rád, že algoritmus, co mě vlastně napadl jen tak, opravdu funguje.
 Ale nemám třeba tušení, jak bych do toho implementoval něco jako garantované návaznosti - možnosti přestupu pouze mezi konkrétnímí spoji i tam, kde by nevyšla minimální doba přestupu...
+
+A co se týče Spring bootu - příjemně mě překvapilo, jak rychlé to je nějakou takovouhle jednodušší aplikaci dát do kupy. 
+Automatická injekce servis a repozitory tříd ulehčují práci - jinak by se asi hodilo si na ně psát factories, co by zajišťovaly, že nebudou instanciovány vícekrát. Ani nemluvím o DB výběrech přes interface.
+Mapování formulářových polí na objekty a jednoduché deklarování sessionových atributů se mi taky dost líbí.
+Jediné zklamání bylo, když jsem zjistil, že na submit můžu namapovat jen jednu metodu (a pak až rozlišit různé akce podle atributu toho submitu). To se ve Stripes dělá líp.
+A dohromady mi asi víc vyhovuje JSP tagová knihovna (+ stripesové tagy) než thymeleaf. Konstrukce jako if a foreach mi fakt připadá přirozenější mít jako samostatné tagy než jako atributy jiných tagů.
