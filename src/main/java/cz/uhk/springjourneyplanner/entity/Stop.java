@@ -20,11 +20,15 @@ public class Stop {
     @Column
     private Integer minutesDep;
 
-    public Stop(Line line, String name, Integer minutesArr, Integer minutesDep) {
+    @Column
+    private String markers;
+
+    public Stop(Line line, String name, Integer minutesArr, Integer minutesDep, String markers) {
         this.line = line;
         this.name = name;
         this.minutesArr = minutesArr;
         this.minutesDep = minutesDep;
+        this.markers = markers;
     }
 
     public Stop() {
@@ -69,5 +73,13 @@ public class Stop {
 
     public void setLine(Line line) {
         this.line = line;
+    }
+
+    public String getMarkers() {
+        return markers;
+    }
+
+    public void setMarkers(String markers) {
+        this.markers = markers;
     }
 }

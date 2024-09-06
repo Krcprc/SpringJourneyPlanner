@@ -3,10 +3,14 @@ package cz.uhk.springjourneyplanner.dto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class SearchParams {
+
+    private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm");
 
     @NotBlank(message = "Stop name is required")
     private String from;
@@ -15,6 +19,7 @@ public class SearchParams {
     private String to;
 
     @NotNull(message = "Time is required")
+    @DateTimeFormat(pattern = "HH:mm")
     private LocalTime time;
 
     private boolean allowTransfers;
@@ -39,6 +44,7 @@ public class SearchParams {
     public int getTimeInt(){
         return time.toSecondOfDay() / 60;
     }
+
     public String getFrom() {
         return from;
     }

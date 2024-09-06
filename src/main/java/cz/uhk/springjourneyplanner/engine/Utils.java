@@ -33,6 +33,7 @@ public class Utils {
      * @param timetable list with 24 hourly departures in minutes separated by space
      * @return list of departures in minutes for 2 sequential days
      */
+    //TODO vzit v potaz moznost markeru a zapornych casu
     public static List<Integer> timetableToConnections(String[] timetable){
         List<Integer> connections = new ArrayList<>(100);
         for (int i = 0; i < 48; i++){

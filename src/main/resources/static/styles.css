@@ -17,6 +17,15 @@ div, button {
     border-radius: 4px;
 }
 
+.connectionDiv {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.connectionDiv p {
+    margin: 5px;
+}
+
 button {
     cursor: pointer;
 }

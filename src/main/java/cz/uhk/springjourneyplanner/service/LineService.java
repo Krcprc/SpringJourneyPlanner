@@ -1,6 +1,7 @@
 package cz.uhk.springjourneyplanner.service;
 
 import cz.uhk.springjourneyplanner.dto.LineDTO;
+import cz.uhk.springjourneyplanner.dto.StopDTO;
 import cz.uhk.springjourneyplanner.entity.Connections;
 import cz.uhk.springjourneyplanner.entity.Line;
 import cz.uhk.springjourneyplanner.entity.Stop;
@@ -50,22 +51,11 @@ public class LineService {
                         .sorted(Comparator.comparingInt(Connections::getHourNumber))
                         .map(Connections::getDepartures).toArray(String[]::new)
         );
+        //TODO zjistit, jestli compare podle odjezdu spolehlive vraci zastavky ve spravnem poradi
         lineDTO.setStops(
                 line.getStops().stream()
                         .sorted(Comparator.comparingInt(Stop::getMinutesDep))
-                        .map(Stop::getName)
-                        .collect(Collectors.toCollection(ArrayList::new))
-        );
-        lineDTO.setMinutesDep(
-                line.getStops().stream()
-                        .sorted(Comparator.comparingInt(Stop::getMinutesDep))
-                        .map(Stop::getMinutesDep)
-                        .collect(Collectors.toCollection(ArrayList::new))
-        );
-        lineDTO.setMinutesArr(
-                line.getStops().stream()
-                        .sorted(Comparator.comparingInt(Stop::getMinutesDep))
-                        .map(Stop::getMinutesArr)
+                        .map(stop -> new StopDTO(stop.getName(), stop.getMinutesArr(), stop.getMinutesDep(), stop.getMarkers()))
                         .collect(Collectors.toCollection(ArrayList::new))
         );
         return lineDTO;
@@ -79,13 +69,10 @@ public class LineService {
         List<Connections> connections = new ArrayList<>();
         Line line = new Line(dto.getName(), stops, connections);
 
-        for (int i = 0; i < dto.getStops().size(); i++){
-            String stopName = dto.getStops().get(i);
-            int travelTimeDep = dto.getMinutesDep().get(i);
-            int travelTimeArr = dto.getMinutesArr().get(i);
-            Stop stop = new Stop(line, stopName, travelTimeArr, travelTimeDep);
-            stops.add(stop);
-        }
+        dto.getStops().stream()
+                .map(stop -> new Stop(line, stop.getName(), stop.getArr(), stop.getDep(), stop.getMarkers()))
+                .forEach(stops::add);
+
         for (int i = 0; i < dto.getDepartures().length; i++){
             Connections connection = new Connections(line, i, dto.getDepartures()[i]);
             connections.add(connection);

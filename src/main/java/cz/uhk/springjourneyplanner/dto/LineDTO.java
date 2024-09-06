@@ -10,19 +10,15 @@ public class LineDTO {
 
     private String name;
 
-    private List<String> stops = new ArrayList<>(2);
-
-    private List<Integer> minutesArr = new ArrayList<>(2);
-    private List<Integer> minutesDep = new ArrayList<>(2);
+    private List<StopDTO> stops = new ArrayList<>();
 
     private String[] departures = new String[24];
 
     private List<Integer> connections;
 
     public LineDTO(){
-        stops.add("");
-        minutesArr.add(0);
-        minutesDep.add(0);
+        stops.add(new StopDTO("", 0, 0, ""));
+        stops.add(new StopDTO("", 0, 0, ""));
     }
 
     public String getName() {
@@ -33,28 +29,12 @@ public class LineDTO {
         this.name = name;
     }
 
-    public List<String> getStops() {
+    public List<StopDTO> getStops() {
         return stops;
     }
 
-    public void setStops(List<String> stops) {
+    public void setStops(List<StopDTO> stops) {
         this.stops = stops;
-    }
-
-    public List<Integer> getMinutesArr() {
-        return minutesArr;
-    }
-
-    public void setMinutesArr(List<Integer> minutesArr) {
-        this.minutesArr = minutesArr;
-    }
-
-    public List<Integer> getMinutesDep() {
-        return minutesDep;
-    }
-
-    public void setMinutesDep(List<Integer> minutesDep) {
-        this.minutesDep = minutesDep;
     }
 
     public String[] getDepartures() {

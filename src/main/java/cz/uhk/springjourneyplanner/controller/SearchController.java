@@ -1,6 +1,7 @@
 package cz.uhk.springjourneyplanner.controller;
 import cz.uhk.springjourneyplanner.dto.LineDTO;
 import cz.uhk.springjourneyplanner.dto.NodeLine;
+import cz.uhk.springjourneyplanner.dto.Path;
 import cz.uhk.springjourneyplanner.dto.SearchParams;
 import cz.uhk.springjourneyplanner.service.LineService;
 import cz.uhk.springjourneyplanner.service.SearchService;
@@ -51,7 +52,7 @@ public class SearchController {
         if (bindingResult.hasErrors()) {
             return "index";
         }
-        List<List<NodeLine>> paths = searchService.search(params);
+        List<Path> paths = searchService.search(params);
         model.addAttribute("paths", paths);
         return "searchResults";
     }

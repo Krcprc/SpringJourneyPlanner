@@ -6,12 +6,12 @@ import java.util.*;
 
 public class PathFinder {
 
-    public static List<List<NodeLine>> findPath(Node starting, String goal){
+    public static List<Path> findPath(Node starting, String goal){
         Map<Node, List<NodeLine>> shortestFrom = new HashMap<>(100);
-        Map<Integer, Set<Node>> layers = new HashMap<>();
+        Map<Integer, List<Node>> layers = new HashMap<>();
         int time = starting.getTime();
         int shortestToGoal = 1440 * 2;
-        layers.put(starting.getTime(), setWith(starting));
+        layers.put(starting.getTime(), listWith(starting));
 
         NodeLine finished = layeredSearch(goal, shortestFrom, layers, time, shortestToGoal);
 
@@ -23,25 +23,31 @@ public class PathFinder {
         List<NodeLine> currentPath = new ArrayList<>();
         currentPath.add(finished);
         dfs(shortestFrom, finished, starting, currentPath, paths);
-        paths = reverseAndOrderPaths(paths);
-        return paths;
+        return reverseAndOrderPaths(paths);
     }
 
     /**
      * napsat, jak algoritmus vyhledava...
      */
-    private static NodeLine layeredSearch(String goal, Map<Node, List<NodeLine>> shortestFrom, Map<Integer,
-            Set<Node>> layers, int time, int shortestToGoal) {
+    //FIXME pada na concurrentmodification - kdyz je nekde jizdni doba 0 a najde to... prepsat loop na iterator?
+    private static NodeLine layeredSearch(String goal, Map<Node, List<NodeLine>> shortestFrom,
+                                          Map<Integer, List<Node>> layers, int time, int shortestToGoal) {
         NodeLine finished = null;
         while (time < shortestToGoal){
-            for (Node node : layers.get(time)){
-                for (NodeLine nd : node.getNeighbors()){
+            layers.remove(time - 1);
+            List<Node> nodeSet = layers.get(time);
+            if (nodeSet == null){
+                continue;
+            }
+            for (int i = 0; i < nodeSet.size(); i++){
+                Node node = nodeSet.get(i);
+                for (NodeLine nd : node.getNeighbors()) {
                     Node neighbor = nd.node();
                     addToLayerMap(layers, neighbor);
                     NodeLine newND = new NodeLine(node, nd.line());
                     addToDistanceMap(shortestFrom, newND, neighbor);
-                    if (neighbor.getStop().equals(goal)){
-                        if (neighbor.getTime() < shortestToGoal){
+                    if (neighbor.getStop().equals(goal)) {
+                        if (neighbor.getTime() < shortestToGoal) {
                             shortestToGoal = neighbor.getTime();
                             finished = new NodeLine(neighbor, null);
                         }
@@ -53,11 +59,11 @@ public class PathFinder {
         return finished;
     }
 
-    private static List<List<NodeLine>> reverseAndOrderPaths(List<List<NodeLine>> paths){
+    private static List<Path> reverseAndOrderPaths(List<List<NodeLine>> paths){
         paths.forEach(Collections::reverse);
         return paths.stream()
                 .map(PathFinder::filterPath)
-                .sorted(Comparator.comparingInt(path -> path.get(0).node().getTime()))
+                .sorted(Comparator.comparingInt(path -> path.getConnections().get(0).startTime()))
                 .toList();
     }
 
@@ -82,7 +88,7 @@ public class PathFinder {
      * @param path original path
      * @return new path
      */
-    private static List<NodeLine> filterPath(List<NodeLine> path){
+    private static Path filterPath(List<NodeLine> path){
         List<NodeLine> newPath = new ArrayList<>();
         boolean waitIncluded = false;
         boolean initialWaitSurpased = false;
@@ -99,7 +105,7 @@ public class PathFinder {
                 waitIncluded = isWaitingPart;
             }
         }
-        return newPath;
+        return Path.toPath(newPath);
     }
 
     private static void addToDistanceMap(Map<Node, List<NodeLine>> shortestFrom, NodeLine nd, Node neighbor) {
@@ -112,18 +118,22 @@ public class PathFinder {
         }
     }
 
-    private static void addToLayerMap(Map<Integer, Set<Node>> layers, Node node){
+    private static void addToLayerMap(Map<Integer, List<Node>> layers, Node node){
         if (layers.containsKey(node.getTime())){
-            layers.get(node.getTime()).add(node);
+            List<Node> discoveredNodes = layers.get(node.getTime());
+            //TODO checknout performace, kdyztak vratit na Set<Node> a nejak vyresit concurrentmodification pri 0 jizdni dobe...
+            if (!discoveredNodes.contains(node)){
+                layers.get(node.getTime()).add(node);
+            }
         } else {
-            layers.put(node.getTime(), setWith(node));
+            layers.put(node.getTime(), listWith(node));
         }
     }
 
-    private static Set<Node> setWith(Node node){
-        Set<Node> set = new HashSet<>();
-        set.add(node);
-        return set;
+    private static List<Node> listWith(Node node){
+        List<Node> list = new ArrayList<>();
+        list.add(node);
+        return list;
     }
 
 }

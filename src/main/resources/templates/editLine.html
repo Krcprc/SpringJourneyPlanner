@@ -17,9 +17,10 @@
                     <th colspan="2">Travel time</th>
                 </tr>
                 <tr th:each="stop, iterStat : ${line.stops}">
-                    <td><input required="required" list="stops" type="text" size="30" th:value="${stop}" th:name="stops[__${iterStat.index}__]" /></td>
-                    <td><input required="required" type="number" size="3" th:value="${line.minutesArr[iterStat.index]}" th:name="minutesArr[__${iterStat.index}__]" /></td>
-                    <td><input required="required" type="number" size="3" th:value="${line.minutesDep[iterStat.index]}" th:name="minutesDep[__${iterStat.index}__]"/></td>
+                    <td><input  type="text" size="3" th:value="${stop.getMarkers()}" th:name="stops[__${iterStat.index}__].markers" /></td>
+                    <td><input  list="stops" type="text" size="30" th:value="${stop.getName()}" th:name="stops[__${iterStat.index}__].name" /></td>
+                    <td><input required="required" type="number" size="3" th:value="${stop.getArr()}" th:name="stops[__${iterStat.index}__].arr" /></td>
+                    <td><input required="required" type="number" size="3" th:value="${stop.getDep()}" th:name="stops[__${iterStat.index}__].dep"/></td>
                 </tr>
                 <tr>
                     <td colspan="3">

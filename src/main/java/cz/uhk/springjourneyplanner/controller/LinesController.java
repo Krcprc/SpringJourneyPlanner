@@ -1,5 +1,6 @@
 package cz.uhk.springjourneyplanner.controller;
 import cz.uhk.springjourneyplanner.dto.LineDTO;
+import cz.uhk.springjourneyplanner.dto.StopDTO;
 import cz.uhk.springjourneyplanner.service.LineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -57,16 +58,12 @@ public class LinesController {
 
 
     public String addRow(LineDTO lineDTO) {
-        lineDTO.getStops().add(lineDTO.getStops().size(), "");
-        lineDTO.getMinutesArr().add(lineDTO.getMinutesArr().size(), 0);
-        lineDTO.getMinutesDep().add(lineDTO.getMinutesDep().size(), 0);
+        lineDTO.getStops().add(lineDTO.getStops().size(), new StopDTO("", 0, 0, ""));
         return "redirect:/edit";
     }
 
     public String removeRow(LineDTO lineDTO) {
         lineDTO.getStops().remove(lineDTO.getStops().size() - 1);
-        lineDTO.getMinutesArr().remove(lineDTO.getMinutesArr().size() - 1);
-        lineDTO.getMinutesDep().remove(lineDTO.getMinutesDep().size() - 1);
         return "redirect:/edit";
     }
 

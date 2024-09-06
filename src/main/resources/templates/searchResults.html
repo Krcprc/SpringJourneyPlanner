@@ -13,11 +13,11 @@
 <p th:if="${paths == null || paths.size() == 0}"> No connections were found. </p>
 
 <div th:if="${paths != null}" th:each="path : ${paths}">
-    <div th:each="pathPart, iterStat : ${path}">
-        <p th:if="${pathPart.line() != null}"> <b th:text="${pathPart.line().getName()}"/></p>
-        <p th:if="${pathPart.line() == null && iterStat.index < path.size() - 1}"> <b>Waiting</b></p>
-        <p th:if="${pathPart.line() == null && iterStat.index == path.size() - 1}"> <b>Arrived</b></p>
-        <p> <span th:text="${pathPart.node().getStop()}"/> <span th:text="${pathPart.node().getReadableTime()}"/></p>
+    <strong th:text="${path.getReadableStartTime()}"/>, <strong th:text="${path.getDuration()}"/> min
+    <div class="connectionDiv" th:each="connection, iterStat : ${path.getConnections()}">
+        <p><b th:text="${connection.line().getName()}"/></p>
+        <p><span th:text="${connection.getReadableStartTime()}"/> <span th:text="${connection.start()}"/> <br>
+        <span th:text="${connection.getReadableEndTime()}"/> <span th:text="${connection.end()}"/></p>
     </div>
 </div>
 

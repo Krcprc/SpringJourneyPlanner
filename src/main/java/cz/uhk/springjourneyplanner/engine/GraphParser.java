@@ -75,12 +75,12 @@ public class GraphParser {
             for (Integer connection : line.getConnections()){
                 int currentTime = connection;
                 for (int stopIndex = 0; stopIndex < line.getStops().size() - 1; stopIndex++){
-                    currentTime = connection + line.getMinutesDep().get(stopIndex);
-                    Node startingNode = allNodes.get(new StopTime(line.getStops().get(stopIndex), currentTime, true));
+                    currentTime = connection + line.getStops().get(stopIndex).getDep();
+                    Node startingNode = allNodes.get(new StopTime(line.getStops().get(stopIndex).getName(), currentTime, true));
                     for (int i = stopIndex + 1; i < line.getStops().size(); i++){
-                        int travelTime = line.getMinutesArr().get(i) - line.getMinutesDep().get(stopIndex);
+                        int travelTime = line.getStops().get(i).getArr() - line.getStops().get(stopIndex).getDep();
                         int arrivalTime = currentTime + travelTime;
-                        Node endingNode = allNodes.get(new StopTime(line.getStops().get(i), arrivalTime, false));
+                        Node endingNode = allNodes.get(new StopTime(line.getStops().get(i).getName(), arrivalTime, false));
                         startingNode.addNeighbor(endingNode, line);
                     }
                 }
