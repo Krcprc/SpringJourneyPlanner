@@ -10,8 +10,6 @@ import java.time.format.DateTimeFormatter;
 
 public class SearchParams {
 
-    private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm");
-
     @NotBlank(message = "Stop name is required")
     private String from;
 

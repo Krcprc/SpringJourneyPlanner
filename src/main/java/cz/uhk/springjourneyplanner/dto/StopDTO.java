@@ -6,13 +6,13 @@ public class StopDTO {
     private String name;
     private Integer arr;
     private Integer dep;
-    private String markers;
+    private String marker;
 
-    public StopDTO(String name, Integer arr, Integer dep, String markers) {
+    public StopDTO(String name, Integer arr, Integer dep, String marker) {
         this.name = name;
         this.arr = arr;
         this.dep = dep;
-        this.markers = markers;
+        this.marker = marker;
     }
 
     public String getName() {
@@ -27,8 +27,8 @@ public class StopDTO {
         return dep;
     }
 
-    public String getMarkers() {
-        return markers;
+    public String getMarker() {
+        return marker;
     }
 
 
@@ -44,7 +44,7 @@ public class StopDTO {
         this.dep = dep;
     }
 
-    public void setMarkers(String markers) {
-        this.markers = markers;
+    public void setMarker(String marker) {
+        this.marker = marker;
     }
 }

@@ -70,7 +70,7 @@ public class LineService {
         Line line = new Line(dto.getName(), stops, connections);
 
         dto.getStops().stream()
-                .map(stop -> new Stop(line, stop.getName(), stop.getArr(), stop.getDep(), stop.getMarkers()))
+                .map(stop -> new Stop(line, stop.getName(), stop.getArr(), stop.getDep(), stop.getMarker()))
                 .forEach(stops::add);
 
         for (int i = 0; i < dto.getDepartures().length; i++){

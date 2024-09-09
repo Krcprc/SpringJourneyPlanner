@@ -14,7 +14,6 @@ public class LineDTO {
 
     private String[] departures = new String[24];
 
-    private List<Integer> connections;
 
     public LineDTO(){
         stops.add(new StopDTO("", 0, 0, ""));
@@ -53,14 +52,4 @@ public class LineDTO {
         this.id = id;
     }
 
-    public List<Integer> getConnections() {
-        if (connections == null){
-            connections = Utils.timetableToConnections(departures);
-        }
-        return connections;
-    }
-
-    public void setConnections(List<Integer> connections) {
-        this.connections = connections;
-    }
 }

@@ -5,6 +5,17 @@
     <link rel="stylesheet" type="text/css" th:href="@{/styles.css}">
 </head>
 <body>
+
+<script>
+    function swapStops() {
+        let fromField = document.getElementById("fromField");
+        let toField = document.getElementById("toField");
+        let from = fromField.value;
+        fromField.value = toField.value;
+        toField.value = from;
+    }
+</script>
+
 <h1>Welcome to Journey planner! Search here for connections:</h1>
 <form method="post" th:action="@{/search}" th:object="${searchParams}">
 
@@ -28,6 +39,7 @@
 
         </div>
         <button type="submit">Search</button>
+        <button type="button" onclick="swapStops()">Swap</button>
         <div style="color: red;" th:if="${#fields.hasErrors('time')}" th:errors="*{time}"></div>
         <div style="color: red;" th:if="${#fields.hasErrors('minTransferTime')}" th:errors="*{minTransferTime}"></div>
     </div>
@@ -40,4 +52,5 @@
 </datalist>
 
 </body>
+
 </html>

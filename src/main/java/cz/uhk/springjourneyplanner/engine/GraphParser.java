@@ -72,19 +72,58 @@ public class GraphParser {
      */
     private static void addConnectionNeighbors(List<LineDTO> lines, Map<StopTime, Node> allNodes){
         for (LineDTO line : lines){
-            for (Integer connection : line.getConnections()){
-                int currentTime = connection;
-                for (int stopIndex = 0; stopIndex < line.getStops().size() - 1; stopIndex++){
-                    currentTime = connection + line.getStops().get(stopIndex).getDep();
-                    Node startingNode = allNodes.get(new StopTime(line.getStops().get(stopIndex).getName(), currentTime, true));
-                    for (int i = stopIndex + 1; i < line.getStops().size(); i++){
-                        int travelTime = line.getStops().get(i).getArr() - line.getStops().get(stopIndex).getDep();
-                        int arrivalTime = currentTime + travelTime;
-                        Node endingNode = allNodes.get(new StopTime(line.getStops().get(i).getName(), arrivalTime, false));
-                        startingNode.addNeighbor(endingNode, line);
-                    }
-                }
+            for (int i = 0; i < 48; i++){
+                String departuresByHour = line.getDepartures()[i % 24];
+                List<List<ConnectionPart>> connections = parseHour(departuresByHour, i, line);
+                connections.forEach(c -> addEdges(c, allNodes, line));
             }
         }
+    }
+
+    private static void addEdges(List<ConnectionPart> connection, Map<StopTime, Node> allNodes, LineDTO line){
+        for (int i = 0; i < connection.size() - 1 ; i++){
+            ConnectionPart starting = connection.get(i);
+            for (int j = i + 1; j < connection.size(); j++){
+                ConnectionPart ending = connection.get(j);
+                Node startingNode = Utils.findNode(allNodes, starting.stop(), starting.dep(), true);
+                Node endingNode = Utils.findNode(allNodes, ending.stop(), ending.arr(), false);
+                startingNode.addNeighbor(endingNode, line);
+            }
+        }
+    }
+
+
+
+
+    private static List<List<ConnectionPart>> parseHour(String connectionsPerHour, int hour, LineDTO line){
+        List<List<ConnectionPart>> list = new ArrayList<>();
+        if (connectionsPerHour == null || connectionsPerHour.length() < 2){
+            return list;
+        }
+        String[] departures = connectionsPerHour.split(" ");
+        for (int j = 0; j < departures.length; j++){
+            try {
+                Integer departure = Integer.parseInt(departures[j].substring(0,2));
+                String markers = departures[j].length() > 2 ? departures[j].substring(2) : "";
+                list.add(handleConnectionMarkers(departure + 60 * hour, markers, line));
+            } catch (NumberFormatException e) {
+                //spolkneme...
+            }
+        }
+        return list;
+    }
+
+    public static List<ConnectionPart> handleConnectionMarkers(int departure, String markers, LineDTO dto){
+        List<ConnectionPart> conn = new ArrayList<>();
+        for (StopDTO stop : dto.getStops()){
+            markers = markers == null ? "" : markers;
+            //FIXME podminka nefunguje, jezdej vsichni vsude, ackoliv nemaj...
+            String stopMarker = stop.getMarker() == null ? "" : stop.getMarker();
+            if (!markers.contains(stopMarker)){
+                continue;
+            }
+            conn.add(new ConnectionPart(stop.getName(), departure + stop.getArr(), departure + stop.getDep()));
+        }
+        return conn;
     }
 }
