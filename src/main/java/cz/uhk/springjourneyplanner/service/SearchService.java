@@ -22,7 +22,6 @@ public class SearchService {
     @Autowired
     private StopRepository stopRepository;
 
-    //TODO vracet jiny objekt, co bude mit dobu trvani a za jak dlouho, a pak list(linka, odkud v kolik, kde v kolik)
     public List<Path> search(SearchParams params){
         List<LineDTO> allLines = lineService.getAllLineDTOs();
         List<String> stopNames = lineService.getAllDistinctStopNames();
@@ -32,8 +31,6 @@ public class SearchService {
         return findPaths(graph, start, params.getTo(), 5);
     }
 
-    //TODO filtrovat kazdej balik cest od pathfinderu.
-    // pri stejnym casu startu i cile a pri stejny lince zacatku i cile ukazat jen jeden s nejmensim poctem polozek
     private List<Path> findPaths(Map<StopTime, Node> graph, Node start, String end, int numberOfPaths){
         List<Path> paths = new ArrayList<>();
         while (paths.size() < numberOfPaths){

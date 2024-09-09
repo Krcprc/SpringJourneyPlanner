@@ -51,7 +51,7 @@ public class LineService {
                         .sorted(Comparator.comparingInt(Connections::getHourNumber))
                         .map(Connections::getDepartures).toArray(String[]::new)
         );
-        //TODO zjistit, jestli compare podle odjezdu spolehlive vraci zastavky ve spravnem poradi
+        //FIXME zajistit spravne zobrazovani zastavek (mozna bez comparu)?
         lineDTO.setStops(
                 line.getStops().stream()
                         .sorted(Comparator.comparingInt(Stop::getMinutesDep))

@@ -29,7 +29,6 @@ public class PathFinder {
     /**
      * napsat, jak algoritmus vyhledava...
      */
-    //FIXME pada na concurrentmodification - kdyz je nekde jizdni doba 0 a najde to... prepsat loop na iterator?
     private static NodeLine layeredSearch(String goal, Map<Node, List<NodeLine>> shortestFrom,
                                           Map<Integer, List<Node>> layers, int time, int shortestToGoal) {
         NodeLine finished = null;
@@ -71,6 +70,7 @@ public class PathFinder {
     /**
      * pouziva se po nalezeni nejkratsi cesty pro zpetne sestavovani cele path (nebo cest, muze byt vice, co trvaji stejne)
      */
+    //FIXME moc moznosti zpusobuje out of memory error. Filtrovat uz tady...
     private static void dfs(Map<Node, List<NodeLine>> graph, NodeLine current, Node sink, List<NodeLine> currentPath, List<List<NodeLine>> allPaths) {
         if (current.node() == sink) {
             allPaths.add(new ArrayList<>(currentPath));
@@ -121,7 +121,6 @@ public class PathFinder {
     private static void addToLayerMap(Map<Integer, List<Node>> layers, Node node){
         if (layers.containsKey(node.getTime())){
             List<Node> discoveredNodes = layers.get(node.getTime());
-            //TODO checknout performace, kdyztak vratit na Set<Node> a nejak vyresit concurrentmodification pri 0 jizdni dobe...
             if (!discoveredNodes.contains(node)){
                 layers.get(node.getTime()).add(node);
             }

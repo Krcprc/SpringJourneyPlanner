@@ -116,13 +116,9 @@ public class GraphParser {
     public static List<ConnectionPart> handleConnectionMarkers(int departure, String markers, LineDTO dto){
         List<ConnectionPart> conn = new ArrayList<>();
         for (StopDTO stop : dto.getStops()){
-            markers = markers == null ? "" : markers;
-            //FIXME podminka nefunguje, jezdej vsichni vsude, ackoliv nemaj...
-            String stopMarker = stop.getMarker() == null ? "" : stop.getMarker();
-            if (!markers.contains(stopMarker)){
-                continue;
+            if (stop.getMarker() == null || (markers != null && markers.contains(stop.getMarker()))){
+                conn.add(new ConnectionPart(stop.getName(), departure + stop.getArr(), departure + stop.getDep()));
             }
-            conn.add(new ConnectionPart(stop.getName(), departure + stop.getArr(), departure + stop.getDep()));
         }
         return conn;
     }
