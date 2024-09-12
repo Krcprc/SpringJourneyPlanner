@@ -3,6 +3,7 @@ package cz.uhk.springjourneyplanner.engine;
 import cz.uhk.springjourneyplanner.dto.*;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class PathFinder {
 
@@ -22,7 +23,10 @@ public class PathFinder {
         List<List<NodeLine>> paths = new ArrayList<>();
         List<NodeLine> currentPath = new ArrayList<>();
         currentPath.add(finished);
-        dfs(shortestFrom, finished, starting, currentPath, paths);
+
+        AtomicInteger maxTransferCount = new AtomicInteger(Integer.MAX_VALUE);
+        AtomicInteger currentTransferCount = new AtomicInteger(0);
+        dfs(shortestFrom, finished, starting, currentPath, paths, maxTransferCount, currentTransferCount);
         return reverseAndOrderPaths(paths);
     }
 
@@ -70,16 +74,24 @@ public class PathFinder {
     /**
      * pouziva se po nalezeni nejkratsi cesty pro zpetne sestavovani cele path (nebo cest, muze byt vice, co trvaji stejne)
      */
-    //FIXME moc moznosti zpusobuje out of memory error. Filtrovat uz tady...
-    private static void dfs(Map<Node, List<NodeLine>> graph, NodeLine current, Node sink, List<NodeLine> currentPath, List<List<NodeLine>> allPaths) {
+    private static void dfs(Map<Node, List<NodeLine>> graph, NodeLine current, Node sink,
+                            List<NodeLine> currentPath, List<List<NodeLine>> allPaths,
+                            AtomicInteger maxTransferCount, AtomicInteger currentTransferCount) {
+
         if (current.node() == sink) {
+            maxTransferCount.set(currentTransferCount.get());
             allPaths.add(new ArrayList<>(currentPath));
             return;
         }
         for (NodeLine neighbor : graph.get(current.node())) {
+            boolean neighborIsLine = neighbor.line() != null;
+            if (neighborIsLine && currentTransferCount.get() == maxTransferCount.get()) continue;
             currentPath.add(neighbor);
-            dfs(graph, neighbor, sink, currentPath, allPaths);
-            currentPath.remove(currentPath.size() - 1);
+            if (neighborIsLine) currentTransferCount.incrementAndGet();
+            dfs(graph, neighbor, sink, currentPath, allPaths, maxTransferCount, currentTransferCount);
+            NodeLine removed = currentPath.remove(currentPath.size() - 1);
+            if (removed.line() != null) currentTransferCount.decrementAndGet();
+
         }
     }
 

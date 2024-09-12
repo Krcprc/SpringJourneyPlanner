@@ -17,6 +17,7 @@ public class PathFilter {
         }
         int minTransfers = newList.stream().map(path -> path.getConnections().size()).min(Comparator.comparingInt(size ->size)).get();
         return newList.stream().filter(path -> path.getConnections().size() == minTransfers).toList();
+        //return newList;
     }
 
 
